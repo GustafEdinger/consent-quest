@@ -1,0 +1,982 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Consent-Quest</title>
+<meta name="description" content="Consent-Quest: Lerne spielerisch, wie Einverständnis im Alltag funktioniert. Mit Brettspiel, Formulierungshilfen und Hilfetelefonen.">
+<meta name="theme-color" content="#ffd23f">
+<meta property="og:title" content="Consent-Quest">
+<meta property="og:description" content="Fragen. Zuhören. Nein akzeptieren. Das Brettspiel rund um Einverständnis.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23ffd23f'/%3E%3Crect x='14' y='14' width='36' height='36' rx='9' fill='%23fff'/%3E%3Ccircle cx='24' cy='24' r='4' fill='%23ff6b6b'/%3E%3Ccircle cx='40' cy='40' r='4' fill='%232ec4b6'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%237b5cff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#fff8e7; --card:#ffffff; --text:#2b2d42; --muted:#5c6078; --line:#2b2d42;
+  --sun:#ffd23f; --coral:#ff6b6b; --teal:#2ec4b6; --sky:#4cc9f0; --violet:#7b5cff; --green:#3ddc84; --pink:#ff8fc8;
+  --l1:#22c55e; --l2:#f59e0b; --l3:#ef4444; --l4:#a855f7;
+  --pop:0 5px 0 var(--line);
+  --head:"Baloo 2","Nunito",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.6 var(--body);overflow-x:hidden}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+h1,h2,h3{font-family:var(--head);line-height:1.08;margin:0}
+h1{font-size:clamp(40px,7vw,74px);font-weight:800;letter-spacing:-.01em;margin-bottom:16px}
+h2{font-size:clamp(30px,5vw,46px);font-weight:800;margin-bottom:12px}
+h3{font-size:22px;font-weight:700;margin-bottom:6px}
+p{margin:0 0 12px}
+.lead{font-size:19px;color:var(--muted);max-width:60ch}
+.mark{background:linear-gradient(transparent 58%,var(--sun) 58%);padding:0 .08em;border-radius:4px}
+.mark.c2{background:linear-gradient(transparent 58%,var(--sky) 58%)}
+.mark.c3{background:linear-gradient(transparent 58%,var(--pink) 58%)}
+
+/* Navigation */
+header.nav{position:sticky;top:10px;z-index:30;padding:0 12px}
+.nav .bar{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:6px;background:#fff;border:3px solid var(--line);border-radius:999px;box-shadow:var(--pop);padding:6px 8px 6px 16px}
+.brand{font:800 22px var(--head);margin-right:auto;display:flex;align-items:center;gap:8px}
+.brand i{width:26px;height:26px;border-radius:8px;background:var(--sun);border:3px solid var(--line);display:inline-block;position:relative}
+.brand i:after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--coral)}
+.nav a.l{color:var(--text);text-decoration:none;font-weight:800;font-size:15px;padding:7px 13px;border-radius:999px}
+.nav a.l:hover{background:var(--sun)}
+.nav a.cta{background:var(--coral);color:#fff;border:3px solid var(--line);text-decoration:none;font-weight:800;padding:5px 15px;border-radius:999px}
+@media(max-width:700px){.nav a.hide-s{display:none}.brand{font-size:19px}}
+
+section{padding:64px 0;position:relative}
+.hero{padding-top:36px;position:relative}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}
+@media(max-width:820px){.hero .wrap{grid-template-columns:1fr}}
+.blob{position:absolute;border-radius:50%;z-index:-1;opacity:.9}
+.b1{width:340px;height:340px;background:var(--sky);right:-90px;top:-60px;opacity:.35}
+.b2{width:200px;height:200px;background:var(--pink);left:-70px;bottom:-30px;opacity:.4}
+.b3{width:120px;height:120px;background:var(--green);right:30%;bottom:-20px;opacity:.35}
+.hero{overflow:hidden}
+
+/* Buttons */
+.btn{display:inline-block;border:3px solid var(--line);cursor:pointer;font:800 17px var(--body);padding:11px 22px;border-radius:16px;background:var(--coral);color:#fff;text-decoration:none;box-shadow:0 4px 0 var(--line);transition:transform .08s,box-shadow .08s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--line)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.btn.sec{background:#fff;color:var(--text)}
+.btn.sun{background:var(--sun);color:var(--text)}
+.btn:focus-visible,.mbtn:focus-visible,.say button:focus-visible{outline:4px solid var(--violet);outline-offset:3px}
+
+/* Karten */
+.card{background:var(--card);border:3px solid var(--line);border-radius:22px;padding:20px;box-shadow:var(--pop)}
+.grid{display:grid;gap:18px}
+.g5{grid-template-columns:repeat(5,1fr)}
+.g2{grid-template-columns:1fr 1fr}
+@media(max-width:900px){.g5{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.g2,.g5{grid-template-columns:1fr}}
+.letter{display:inline-grid;place-items:center;width:48px;height:48px;border-radius:14px;border:3px solid var(--line);font:800 26px var(--head);margin-bottom:8px;color:var(--text)}
+.f1c{background:var(--sun)}.f2c{background:var(--sky)}.f3c{background:var(--pink)}.f4c{background:var(--green)}.f5c{background:var(--coral);color:#fff}
+.g5 .card{transition:transform .15s}
+.g5 .card:nth-child(odd):hover{transform:rotate(-2deg) translateY(-4px)}
+.g5 .card:nth-child(even):hover{transform:rotate(2deg) translateY(-4px)}
+.yes{background:#e6fbef}.no{background:#ffe9e9}
+.yes h3,.no h3{display:flex;align-items:center;gap:10px}
+.ic{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);display:inline-grid;place-items:center;flex:none}
+.yes .ic{background:var(--green)}.no .ic{background:var(--coral)}
+.ic svg{width:18px;height:18px}
+.card ul{margin:0;padding-left:20px} .card li{margin:5px 0}
+
+/* Sprechblasen */
+.say{display:flex;gap:10px;align-items:center;justify-content:space-between;background:#fff;border:3px solid var(--line);border-radius:18px;padding:11px 14px;font-weight:700}
+.say button{flex:none;font:800 13px var(--body);padding:6px 12px;border-radius:999px;border:3px solid var(--line);background:var(--sun);color:var(--text);cursor:pointer}
+.say button:hover{background:var(--sky)}
+.stack{display:grid;gap:12px}
+.stack.ask .say{background:#e8f9ff}.stack.no-say .say{background:#fff0f6}
+
+/* Spiel */
+#spiel{background:linear-gradient(160deg,#6c4cf5 0%,#3a86ff 55%,#2ec4b6 100%);color:#fff;border-top:4px solid var(--line);border-bottom:4px solid var(--line);overflow:hidden}
+#spiel:before,#spiel:after{content:"";position:absolute;border-radius:50%;background:#fff;opacity:.12;z-index:0}
+#spiel:before{width:300px;height:300px;left:-100px;top:-80px}
+#spiel:after{width:220px;height:220px;right:-60px;bottom:-60px}
+#spiel .wrap{position:relative;z-index:1}
+#spiel .lead{color:#eaf4ff}
+.price-note{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 16px}
+.price-note span{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;background:#fff;color:var(--text);border:3px solid var(--line);border-radius:999px;padding:3px 14px 3px 8px}
+.price-note i{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);display:inline-block}
+.modus{margin:0 0 14px}
+.mrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+.mbtn{font:800 15px var(--body);padding:9px 18px;border-radius:14px;border:3px solid var(--line);background:#fff;color:var(--text);cursor:pointer;box-shadow:0 3px 0 var(--line)}
+.mbtn.on{background:var(--sun)}
+.mbtn.go{background:var(--green)}
+.mbtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.mbtn[hidden],#codeWrap[hidden]{display:none}
+.modus label{font-size:15px;font-weight:800;color:#fff}
+.modus input{font:800 16px var(--body);padding:8px 12px;border-radius:12px;border:3px solid var(--line);background:#fff;color:var(--text);margin-left:6px}
+.onstat{font-weight:800;color:var(--sun);min-height:1.4em}
+.hinw{font-size:14px;color:#eaf4ff;margin:6px 0 0;max-width:70ch}
+.cvwrap{position:relative;overflow-x:auto;border-radius:22px;border:4px solid var(--line);box-shadow:0 8px 0 var(--line);background:#2f6fd6}
+.fsbtn{position:absolute;top:10px;left:10px;z-index:5;font:800 13px var(--body);padding:6px 14px;border-radius:999px;border:3px solid var(--line);background:var(--sun);color:var(--text);cursor:pointer}
+.fsbtn:hover{background:#fff}
+.cvwrap.full,.cvwrap:fullscreen{position:fixed;inset:0;z-index:1000;background:linear-gradient(#7fe0ff,#8f6bff);display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:0;border:0;box-shadow:none;height:100dvh}
+.cvwrap.full canvas,.cvwrap:fullscreen canvas{width:min(100vw,calc(100dvh*1100/700));min-width:0;border-radius:0}
+.cvwrap canvas{width:100%;min-width:760px;aspect-ratio:1100/700;height:auto;display:block;background:#2f6fd6;border:0;touch-action:manipulation}
+.dicebox,.cube,.face{display:none}
+.rothint{display:none;position:absolute;top:56px;left:50%;transform:translateX(-50%);z-index:6;width:min(92%,420px);background:#fff;color:var(--text);border:3px solid var(--line);border-radius:18px;box-shadow:0 4px 0 var(--line);padding:10px 14px;font-weight:800;font-size:15px;line-height:1.3;align-items:center;gap:12px;cursor:pointer}
+.rothint.show{display:flex}
+.rothint u{color:var(--violet);white-space:nowrap}
+.ph{flex:none;width:22px;height:36px;border:4px solid var(--line);border-radius:7px;background:var(--sun);animation:dreh 2.4s ease-in-out infinite}
+@keyframes dreh{0%,25%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+
+
+.cvwrap{display:flex}
+.cvwrap canvas{flex:1 1 auto}
+/* Hilfe */
+#hilfe{background:#e8f9ff;border-top:4px solid var(--line)}
+.hotline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:3px dashed #c9d6e8;padding:12px 0}
+.hotline:last-child{border-bottom:0}
+.hotline b{font:800 24px var(--head);background:var(--sun);border:3px solid var(--line);border-radius:14px;padding:0 14px}
+footer{padding:34px 0;color:var(--text);font-weight:700;text-align:center;border-top:4px solid var(--line);background:var(--sun)}
+
+/* Bewegung */
+.float{animation:schweb 3.4s ease-in-out infinite}
+.float.d2{animation-delay:-.8s}.float.d3{animation-delay:-1.6s}.float.d4{animation-delay:-2.4s}
+@keyframes schweb{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@media (prefers-reduced-motion: reduce){.ph{animation:none}html{scroll-behavior:auto}.float{animation:none}.btn,.g5 .card{transition:none}}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="bar">
+    <span class="brand"><i></i>Consent-Quest</span>
+    <a class="l hide-s" href="#was">Was ist Consent?</a>
+    <a class="l hide-s" href="#fragen">Fragen &amp; Nein sagen</a>
+    <a class="l" href="#hilfe">Hilfe</a>
+    <a class="cta" href="#spiel">Spielen</a>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="wrap">
+    <div>
+      <h1><span class="mark">Fragen.</span> <span class="mark c2">Zuhören.</span> <span class="mark c3">Nein akzeptieren.</span></h1>
+      <p class="lead">Consent bedeutet Einverständnis: Alle, die bei etwas mitmachen, wollen es auch. Hier lernst du, wie das im Alltag aussieht, und testest es im Brettspiel mit deinen Freund:innen.</p>
+      <p style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="#spiel">Jetzt spielen</a> <a class="btn sec" href="#was">Erst lesen</a></p>
+    </div>
+    <div aria-hidden="true">
+      <svg viewBox="0 -30 360 340" width="100%" role="img" aria-label="Vier Felder mit den Preisen 10, 20, 30 und 40">
+        <defs>
+          <g id="blk"><polygon points="0,0 70,-35 140,0 70,35" /><polygon points="0,0 70,35 70,75 0,40" opacity=".78"/><polygon points="140,0 70,35 70,75 140,40" opacity=".58"/></g>
+        </defs>
+        <g class="float" ><g transform="translate(20,70)"><g fill="var(--l1)" stroke="#2b2d42" stroke-width="3" stroke-linejoin="round"><use href="#blk"/></g><text x="70" y="8" text-anchor="middle" font-weight="800" font-size="26" fill="#fff" stroke="#2b2d42" stroke-width="1">10</text></g></g>
+        <g class="float d2"><g transform="translate(120,20)"><g fill="var(--l2)" stroke="#2b2d42" stroke-width="3" stroke-linejoin="round"><use href="#blk"/></g><text x="70" y="8" text-anchor="middle" font-weight="800" font-size="26" fill="#fff" stroke="#2b2d42" stroke-width="1">20</text></g></g>
+        <g class="float d3"><g transform="translate(100,150)"><g fill="var(--l3)" stroke="#2b2d42" stroke-width="3" stroke-linejoin="round"><use href="#blk"/></g><text x="70" y="8" text-anchor="middle" font-weight="800" font-size="26" fill="#fff" stroke="#2b2d42" stroke-width="1">30</text></g></g>
+        <g class="float d4"><g transform="translate(200,100)"><g fill="var(--l4)" stroke="#2b2d42" stroke-width="3" stroke-linejoin="round"><use href="#blk"/></g><text x="70" y="8" text-anchor="middle" font-weight="800" font-size="26" fill="#fff" stroke="#2b2d42" stroke-width="1">40</text></g></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="was" class="wrap">
+  <h2>Was ist <span class="mark">Consent</span>?</h2>
+  <p class="lead" style="margin-bottom:26px">Consent heißt: Ich frage, und du entscheidest. Ein „Ja“ zählt nur, wenn es echt ist. Fünf Merkmale helfen dir beim Prüfen:</p>
+  <div class="grid g5">
+    <div class="card"><span class="letter f1c">F</span><h3>Freiwillig</h3><p>Ohne Druck, Drohung oder Überreden.</p></div>
+    <div class="card"><span class="letter f2c">R</span><h3>Rücknehmbar</h3><p>Man darf jederzeit „Stopp“ sagen, auch mittendrin.</p></div>
+    <div class="card"><span class="letter f3c">I</span><h3>Informiert</h3><p>Alle wissen, worum es genau geht.</p></div>
+    <div class="card"><span class="letter f4c">B</span><h3>Begeistert</h3><p>Man will es wirklich, nicht nur „na gut“.</p></div>
+    <div class="card"><span class="letter f5c">S</span><h3>Spezifisch</h3><p>Ein Ja zu einer Sache ist kein Ja zu allem.</p></div>
+  </div>
+  <div class="grid g2" style="margin-top:26px">
+    <div class="card yes"><h3><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2b2d42" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span>Das ist Zustimmung</h3><ul><li>Ein klares „Ja, gerne“</li><li>Begeisterte Worte und entspanntes Körpergefühl</li><li>Eigene Ideen und Rückfragen</li><li>Ein Ja, nachdem du gefragt hast</li></ul></div>
+    <div class="card no"><h3><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2b2d42" stroke-width="4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Das ist keine Zustimmung</h3><ul><li>Schweigen oder Wegschauen</li><li>„Ich weiß nicht“, „Vielleicht“, „Hmm“</li><li>Ein Ja unter Druck, nach langem Bohren</li><li>Ein Ja von früher, wenn sich etwas geändert hat</li><li>Ein Ja, wenn jemand betrunken oder eingeschüchtert ist</li></ul></div>
+  </div>
+</section>
+
+<section id="spiel">
+  <div class="wrap">
+    <h2>Das Brettspiel</h2>
+    <p class="lead" style="margin-bottom:16px">Jede:r startet mit 100 Coins. Würfle, ziehe und beantworte die Consent-Frage auf deinem Feld. Richtig: Du bekommst das Doppelte deines Einsatzes. Falsch: Der Einsatz ist weg. Wer am Ende die meisten Coins hat, gewinnt.</p>
+    <div class="price-note" aria-label="Preise der Felder">
+      <span><i style="background:var(--l1)"></i>Einfach 10</span>
+      <span><i style="background:var(--l2)"></i>Mittel 20</span>
+      <span><i style="background:var(--l3)"></i>Schwer 30</span>
+      <span><i style="background:var(--l4)"></i>Sehr schwer 40</span>
+    </div>
+    <div class="modus" id="modus">
+      <div class="mrow"><button type="button" class="mbtn on" id="mLokal">Lokal spielen</button><button type="button" class="mbtn" id="mOnline">Online spielen</button></div>
+      <div id="onPanel" hidden>
+        <div class="mrow">
+          <label>Dein Name <input id="nick" maxlength="14" autocomplete="off"></label>
+          <button type="button" class="mbtn go" id="mCreate">Raum erstellen</button>
+          <span id="codeWrap"><label>oder Code <input id="codeIn" maxlength="4" autocomplete="off" style="width:5em;text-transform:uppercase"></label> <button type="button" class="mbtn go" id="mJoin">Beitreten</button></span>
+          <button type="button" class="mbtn" id="mLeave" hidden>Raum verlassen</button>
+        </div>
+        <div class="onstat" id="onStatus" aria-live="polite"></div>
+        <p class="hinw">Mitspieler öffnen dieselbe Seite, tippen auf „Online spielen“ und geben den Raum-Code ein (2 bis 4 Personen). Der Host startet das Spiel. Funktioniert über das Internet, ohne Anmeldung.</p>
+      </div>
+    </div>
+    <div class="cvwrap" id="cvwrap"><button class="fsbtn" id="fsBtn" type="button">Vollbild</button><div class="rothint" id="rotHint"><span class="ph"></span>Halte dein Handy quer, dann siehst du das ganze Spielfeld. <u>Ausblenden</u></div><canvas id="cv" width="1100" height="700" aria-label="Konsens-Quest Brettspiel"></canvas></div>
+  </div>
+</section>
+
+<section id="fragen" class="wrap">
+  <h2>So fragst du, und so sagst du <span class="mark c3">Nein</span></h2>
+  <div class="grid g2" style="margin-top:22px">
+    <div>
+      <h3 style="margin-bottom:12px">Fragen</h3>
+      <div class="stack ask">
+        <div class="say"><span>„Darf ich dich umarmen?“</span><button>Kopieren</button></div>
+        <div class="say"><span>„Ist es okay, wenn ich das Foto teile?“</span><button>Kopieren</button></div>
+        <div class="say"><span>„Hast du Lust auf …? Du kannst auch Nein sagen.“</span><button>Kopieren</button></div>
+        <div class="say"><span>„Passt das für dich so?“</span><button>Kopieren</button></div>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:12px">Nein sagen</h3>
+      <div class="stack no-say">
+        <div class="say"><span>„Nein, das möchte ich nicht.“</span><button>Kopieren</button></div>
+        <div class="say"><span>„Stopp, bitte hör auf.“</span><button>Kopieren</button></div>
+        <div class="say"><span>„Ich habe meine Meinung geändert.“</span><button>Kopieren</button></div>
+        <div class="say"><span>„Dazu brauche ich mehr Zeit.“</span><button>Kopieren</button></div>
+      </div>
+    </div>
+  </div>
+  <p style="margin-top:22px;font-weight:700">Und wenn du ein Nein hörst: „Okay, danke, dass du es sagst.“ Mehr braucht es nicht.</p>
+</section>
+
+<section id="hilfe">
+  <div class="wrap">
+    <h2>Hilfe, wenn etwas passiert ist</h2>
+    <p class="lead" style="margin-bottom:22px">Wenn jemand deine Grenze nicht beachtet hat, ist das nicht deine Schuld. Du musst das nicht allein tragen. Sprich mit einer Vertrauensperson, zum Beispiel Eltern, Lehrkräften, Schulsozialarbeit oder Freund:innen.</p>
+    <div class="card">
+      <div class="hotline"><span>Nummer gegen Kummer (Kinder und Jugendliche, kostenlos, anonym)</span><b>116 111</b></div>
+      <div class="hotline"><span>Hilfetelefon Sexueller Missbrauch (kostenlos, anonym)</span><b>0800 22 55 530</b></div>
+      <div class="hotline"><span>Hilfetelefon Gewalt gegen Frauen (rund um die Uhr)</span><b>116 016</b></div>
+      <div class="hotline"><span>Notruf Rettungsdienst</span><b>112</b></div>
+      <div class="hotline"><span>Notruf Polizei</span><b>110</b></div>
+    </div>
+    <p style="margin-top:14px;color:var(--muted);font-size:14px">Die Nummern gelten für Deutschland. Im Notfall bitte immer sofort 112 oder 110 wählen.</p>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">Consent-Quest ist ein Lernspiel. Es ersetzt keine persönliche Beratung.</div></footer>
+
+<script>
+const POOL = {"1": [["Was bedeutet Konsens?", "Alle sind freiwillig und ausdrücklich einverstanden.", "Eine Person entscheidet und die anderen schweigen.", "Man hat irgendwann früher einmal Ja gesagt.", "Konsens heißt: Alle wollen es wirklich, freiwillig und ohne Druck."], ["Dein Freund sagt Nein zu einer Umarmung. Was tust du?", "Ich akzeptiere das Nein.", "Ich frage so lange, bis er Ja sagt.", "Ich umarme ihn trotzdem kurz.", "Ein Nein gilt immer, auch ohne Begründung."], ["Darfst du ein Foto von jemandem im Chat teilen, ohne zu fragen?", "Nein, ich frage vorher.", "Ja, wenn es lustig ist.", "Ja, wenn das Foto harmlos aussieht.", "Wer auf einem Foto zu sehen ist, entscheidet mit, ob es geteilt wird."], ["Jemand weicht zurück, als du näherkommst. Was tust du?", "Ich halte Abstand und frage nach.", "Ich gehe näher, damit sie sich gewöhnt.", "Ich tue so, als hätte ich es nicht gesehen.", "Zurückweichen ist ein klares Signal: Abstand geben und nachfragen."], ["Eine Freundin sagt: 'Heute lieber nicht.' Was antwortest du?", "'Alles klar, kein Problem.'", "'Komm schon, stell dich nicht so an.'", "'Dann nenn mir wenigstens einen Grund.'", "Ein Nein braucht keinen Grund."], ["Wann darf man seine Meinung ändern?", "Jederzeit.", "Nie, ein Ja gilt für immer.", "Nur ganz am Anfang.", "Zustimmung kann jederzeit zurückgenommen werden."], ["Wer entscheidet, ob du umarmt werden möchtest?", "Du selbst.", "Die Person, die dich umarmen will.", "Die Mehrheit der Gruppe.", "Dein Körper, deine Entscheidung."], ["Bei einer Party will jemand nicht mittanzen. Was ist okay?", "Die Person darf einfach zuschauen.", "Wir ziehen sie auf die Tanzfläche.", "Wir lachen sie aus, bis sie mitmacht.", "Niemand muss mitmachen."], ["Du bekommst ein Bild, das dir unangenehm ist. Was darfst du tun?", "Sagen, dass ich das nicht möchte.", "Es schweigend aushalten.", "Es an andere weiterschicken.", "Du darfst Nein sagen und dir jederzeit Hilfe holen."], ["Ein Freund erzählt dir ein Geheimnis. Was machst du?", "Ich behalte es für mich.", "Ich erzähle es einer anderen Freundin.", "Ich poste es ohne Namen im Netz.", "Geheimnisse gehören der Person, die sie anvertraut hat."], ["Was ist der sicherste Weg, zu erfahren, ob jemand etwas möchte?", "Freundlich nachfragen.", "Raten.", "Abwarten, ob jemand protestiert.", "Fragen ist immer sicherer als Raten."], ["Welcher Satz ist eine echte Frage nach Zustimmung?", "'Ist das okay für dich?'", "'Du willst das doch auch, oder?'", "'Ich mache das jetzt einfach.'", "Eine offene Frage lässt Platz für ein Nein."], ["Jemand sagt 'Stopp!'. Was machst du?", "Ich höre sofort auf.", "Ich mache noch kurz weiter.", "Ich diskutiere erst darüber.", "Bei 'Stopp' wird sofort aufgehört."], ["Dir wird ein Getränk angeboten, du möchtest keins. Was reicht?", "Ein einfaches 'Nein, danke'.", "Eine gute Ausrede.", "Du musst wenigstens probieren.", "Ein Nein reicht immer."], ["Darf man andere in einer Story filmen, ohne sie zu fragen?", "Nein, man fragt vorher.", "Ja, immer.", "Ja, wenn man sie nicht markiert.", "Wer erkennbar zu sehen ist, sollte vorher gefragt werden."], ["Dein Freund hat keine Lust auf ein Spiel. Was ist fair?", "Wir akzeptieren das und bleiben freundlich.", "Wir überreden ihn, bis er nachgibt.", "Wir sind beleidigt und reden nicht mehr mit ihm.", "Ein Nein zu akzeptieren, ohne zu schmollen, zeigt Respekt."]], "2": [["Deine Freundin sagte gestern Ja zu einem gemeinsamen Video, heute nicht mehr. Was gilt?", "Heute zählt. Das Video wird nicht gedreht.", "Gestern war Ja, also bleibt es dabei.", "Sie muss es mir erklären, sonst gilt das Ja.", "Zustimmung kann zurückgenommen werden, auch kurz vor dem Start."], ["Jemand lächelt, sagt aber nichts zu deinem Vorschlag. Was tust du?", "Ich frage nach, ob es wirklich passt.", "Lächeln heißt Ja.", "Schweigen heißt Ja.", "Lächeln und Schweigen sind keine ausdrückliche Zustimmung."], ["Dein Freund will dein Handy-Passwort, um zu beweisen, dass du ihm vertraust.", "Ich darf Nein sagen. Vertrauen braucht keine Kontrolle.", "Ich muss es geben, sonst ist er sauer.", "Ich gebe es, sonst denkt er, ich verstecke etwas.", "Privatsphäre ist ein Recht und kein Beweis von Schuld."], ["Du hast ein lustiges Foto von deiner Freundin gemacht. Sie möchte nicht, dass es jemand sieht.", "Ich zeige es niemandem und lösche es auf Wunsch.", "Ich zeige es nur ein paar Leuten.", "Ich poste es kurz und lösche es später.", "Wenn sie es nicht möchte, bleibt das Foto privat."], ["Eine Gruppe will ein Trinkspiel spielen. Du willst nicht. Was ist okay?", "Ich sage Nein und bleibe trotzdem dabei.", "Ich mache mit, um dazuzugehören.", "Ich erfinde eine Ausrede, weil ein Nein nicht reicht.", "Ein Nein reicht, und wer es nicht akzeptiert, macht Druck."], ["Welcher Satz ist ein Beispiel für Druck?", "'Wenn du mich wirklich magst, machst du das.'", "'Möchtest du das auch?'", "'Sag mir, wenn du aufhören willst.'", "Schuldgefühle zu machen ist Druck und verhindert freie Zustimmung."], ["Du hast einmal gefragt und ein Ja bekommen. Musst du später wieder fragen?", "Ja, vor allem wenn sich etwas ändert.", "Nein, einmal reicht für immer.", "Nur, wenn die andere Person etwas sagt.", "Zustimmung gilt für den Moment und die besprochene Sache."], ["Welches Zeichen kann bedeuten 'Ich möchte das nicht'?", "Wegdrehen, Anspannung oder ein zögerndes 'Hm'.", "Ein rotes Gesicht heißt immer Ja.", "Nur ein lautes Nein zählt.", "Auch leise Zeichen zählen. Im Zweifel fragst du nach."], ["Im Klassenchat wird ein peinliches Bild eines Mitschülers geteilt. Was ist gut?", "Ich mache nicht mit und sage, dass das nicht okay ist.", "Ich lache mit, es ist ja nur ein Bild.", "Ich leite es weiter, es ist ja schon im Chat.", "Weiterleiten verletzt die Person noch mehr. Besser stoppen und Hilfe holen."], ["Du bist unsicher, ob du bei einer Mutprobe mitmachen willst. Was ist ein guter Satz?", "'Ich bin unsicher, ich mache nicht mit.'", "'Okay, ich mache es halt.'", "'Ich mache mit, damit niemand sauer ist.'", "Du darfst bei Mutproben immer Nein sagen."], ["Jemand sagt: 'Ich weiß nicht.' Wie gehst du damit um?", "Ich nehme es nicht als Ja und dränge nicht.", "Ich nehme es als Ja.", "Ich überrede, bis die Person sicher ist.", "Unsicherheit ist keine Zustimmung."], ["Du siehst, wie jemand auf einer Party bedrängt wird. Was tust du?", "Ich frage nach, ob alles okay ist, oder hole Hilfe.", "Ich sehe weg.", "Ich filme es.", "Eingreifen oder Hilfe holen kann viel bewirken."], ["Welcher Satz zeigt echte Zustimmung?", "'Ja, das möchte ich auch.'", "'Na gut, von mir aus.'", "'Wenn du unbedingt willst.'", "Echte Zustimmung ist freiwillig, klar und ohne Widerwillen."], ["Dein Freund will immer deinen Live-Standort sehen. Du bist unsicher. Was ist okay?", "Ich darf Nein sagen oder es später ändern.", "Ich muss zustimmen, wenn er fragt.", "Ich stimme zu, damit es keinen Streit gibt.", "Auch bei Nähe darfst du deinen Standort für dich behalten."], ["Jemand ist ganz still geworden, während du Witze machst. Was tust du?", "Ich höre auf und frage, ob alles okay ist.", "Ich mache weiter, es war ja lustig gemeint.", "Ich mache noch mehr Witze.", "Die Wirkung zählt mehr als die Absicht."], ["Jemand sagt Ja, weil er Angst hat, dich zu enttäuschen. Ist das Konsens?", "Nein, Zustimmung muss freiwillig sein.", "Ja, ein Ja ist ein Ja.", "Ja, wenn er es laut genug sagt.", "Zustimmung aus Angst ist keine freie Zustimmung."]], "3": [["Du fragst und bekommst ein Ja, aber die Stimme klingt unsicher. Was tust du?", "Ich frage ehrlich nach und lasse Raum für ein Nein.", "Ja ist Ja, ich mache weiter.", "Ich nehme das Zögern nicht ernst.", "Unsicherheit ist ein Zeichen, noch einmal nachzufragen."], ["Du bist Teamkapitän und fragst jüngere Spieler, ob sie bei einem Aufnahmeritual mitmachen. Alle sagen Ja. Was bedenkst du?", "Wer weniger Macht hat, sagt manchmal aus Angst Ja.", "Alle haben Ja gesagt, also ist alles okay.", "Rituale sind immer in Ordnung.", "Machtunterschiede können freie Zustimmung verhindern."], ["Dein Freund erlaubte dir, ein Foto zu posten. Später sagt er: 'Nimm es bitte raus.'", "Ich nehme es raus.", "Ich lasse es, er hat ja erlaubt.", "Ich lasse es, es wurde schon geteilt.", "Eine Erlaubnis kann zurückgenommen werden."], ["Jemand hat viel getrunken und sagt fröhlich Ja. Zählt das?", "Nein, wer nicht klar denken kann, kann nicht richtig zustimmen.", "Ja, er hat es doch gesagt.", "Ja, wenn er dabei lacht.", "Zustimmung braucht einen klaren Kopf."], ["Eine Freundin sagt immer Ja, wirkt aber oft unglücklich. Was tust du?", "Ich frage, ob sie wirklich möchte, und zeige: Ein Nein ist okay.", "Ich freue mich, sie macht ja immer mit.", "Ich schlage noch mehr vor.", "Wer immer Ja sagt, traut sich vielleicht kein Nein. Mach es ihr leicht."], ["Du hast ein Nein gehört. Die Person fragt später: 'Bist du sauer?' Was passt?", "'Nein, alles gut. Danke, dass du es gesagt hast.'", "'Ja, ein bisschen.'", "'Du schuldest mir was.'", "Ein Nein ehrlich zu sagen ist mutig und verdient Dank."], ["Ein Online-Bekannter aus einem Spiel will wissen, wo du wohnst. Was tust du?", "Ich verrate es nicht und spreche mit einer Vertrauensperson.", "Ich verrate es, er ist ja nett.", "Ich verrate es, wenn er auch etwas verrät.", "Persönliche Daten gibst du nur weiter, wenn du es wirklich willst."], ["Jemand sagt Nein, lächelt aber höflich. Was zählt?", "Das Nein.", "Das Lächeln.", "Das, was mir besser passt.", "Höflichkeit ist keine Zustimmung. Das gesagte Nein gilt."], ["Eure Gruppe will ein Video posten. Alle stimmen zu, bis auf eine Person. Was nun?", "Wir posten nicht oder nur ohne sie und mit ihrer Zustimmung.", "Die Mehrheit entscheidet.", "Wir posten und fragen später nach.", "Jede Person entscheidet über sich selbst."], ["Was fehlt zu echter Zustimmung, wenn jemand nur nicht Nein gesagt hat?", "Ein klares, freiwilliges Ja.", "Nichts, kein Nein reicht.", "Ein Lächeln.", "Fehlender Widerspruch ist kein Ja."], ["Du durftest ein Foto deiner Freundin für ein Schulplakat nutzen. Nun willst du es für etwas anderes verwenden.", "Ich muss neu fragen.", "Das ist okay, sie hat ja erlaubt.", "Das ist okay, solange es nicht peinlich ist.", "Zustimmung gilt für den besprochenen Zweck."], ["Dein Freund wird wütend, als du Nein sagst, und nennt dich egoistisch. Was ist richtig?", "Mein Nein ist okay, Druck zu machen nicht.", "Ich gebe nach, damit er wieder nett ist.", "Ich entschuldige mich fürs Nein.", "Wütende Reaktionen auf ein Nein sind Druck. Dein Nein bleibt gültig."], ["Eine erwachsene Person bittet dich, ein privates Foto zu schicken und es geheim zu halten. Was tust du?", "Ich schicke nichts und erzähle es einer Vertrauensperson.", "Ich schicke es, sie ist ja erwachsen.", "Ich schicke es, wenn sie es verspricht.", "Solche Bitten und Geheimhaltung sind ein Warnzeichen. Hol dir Hilfe."], ["Eine Verwandte will dich zur Begrüßung umarmen, dir ist das unangenehm. Was darfst du?", "Nein sagen und zum Beispiel High Five anbieten.", "Es aushalten, um höflich zu sein.", "Warten, bis es vorbei ist.", "Du darfst auch bei Verwandten Nein sagen."], ["Wie sollte eine Mutprobe ablaufen, damit sie fair ist?", "Alle machen freiwillig mit und dürfen jederzeit aussteigen.", "Wer anfängt, muss auch fertig machen.", "Wer aussteigt, bekommt eine Strafe.", "Freiwilligkeit und Ausstiegsmöglichkeit gehören zu Konsens."], ["Du fragst per Chat und bekommst nur einen Daumen hoch. Persönlich wirkt die Person unsicher. Was tust du?", "Ich frage persönlich noch einmal nach.", "Daumen hoch heißt Ja, fertig.", "Ich ignoriere ihre Unsicherheit.", "Zustimmung muss auch zur Situation und zur Körpersprache passen."]], "4": [["Jemand stimmt zu, weil er sonst die Freundschaft verlieren würde. Ist das freiwillig?", "Nein, Angst vor Folgen schränkt die Freiwilligkeit ein.", "Ja, er hat ja entschieden.", "Ja, wenn er es laut sagt.", "Wer mit Nachteilen droht, verhindert freie Zustimmung."], ["Wann ist Zustimmung nicht möglich?", "Wenn jemand schläft, stark betrunken oder unter Druck ist.", "Nur wenn die Person weint.", "Nie, jeder kann immer zustimmen.", "Zustimmung braucht Wachheit, klaren Kopf und Freiwilligkeit."], ["Ihr seid in einer Beziehung. Heißt ein Ja einmal automatisch Ja für immer?", "Nein, es wird jedes Mal neu gefragt.", "Ja, in einer Beziehung gilt ein Dauer-Ja.", "Ja, nach einem Monat Beziehung.", "Auch in Beziehungen gilt: Zustimmung ist immer aktuell."], ["Du leitest eine Gruppe und fragst, ob alle ein anstrengendes Spiel mitmachen. Niemand widerspricht. Was ist klug?", "Ich biete eine Alternative oder eine anonyme Antwort an.", "Niemand widerspricht, also ist es okay.", "Ich bitte die Ruhigen, es einfach zu probieren.", "Bei Machtgefälle bedeutet Schweigen oft nicht Zustimmung."], ["Du durftest ein Foto deiner Freundin machen. Später wird es als Meme verändert. Was gilt?", "Auch für Veränderungen braucht es ihre Zustimmung.", "Nur das Original braucht Zustimmung.", "Memes sind immer okay.", "Zustimmung gilt nur für das, was besprochen wurde."], ["Jemand sagt erst Nein, nach zwei Tagen plötzlich Ja. Was bedenkst du?", "Ich frage ehrlich nach, ob das Ja freiwillig ist.", "Ich nehme es sofort an, sie hat ja zugestimmt.", "Ich habe lang genug gewartet, jetzt gilt das.", "Ein spätes Ja kann auf Druck beruhen. Frage einfühlsam nach."], ["Welcher Satz zeigt begeisterte Zustimmung?", "'Ja, darauf habe ich richtig Lust!'", "'Na gut.'", "'Wenn es sein muss.'", "Ein echtes Ja klingt nach Lust und nicht nach Nachgeben."], ["Eine Gruppe stimmt ab, ob sie ein peinliches Video eines Mitschülers teilt. Die Mehrheit sagt Ja. Was gilt?", "Die Abstimmung ersetzt nicht seine Zustimmung.", "Die Mehrheit entscheidet.", "Wir fragen ihn nach dem Posten.", "Über eine Person entscheidet nur sie selbst."], ["Warum ist 'Schweigen heißt Zustimmung' gefährlich?", "Weil Menschen aus Angst oder Schock schweigen können.", "Weil Schweigen immer Nein heißt.", "Es ist gar nicht gefährlich.", "Schweigen sagt nichts darüber, was die Person will."], ["Dein Freund erlaubt dir, sein Geheimnis einer Person zu erzählen. Du erzählst es auch einer zweiten, 'weil sie zuverlässig ist'.", "Das ist nicht okay, die Erlaubnis galt nur für eine Person.", "Das ist okay, sie ist ja zuverlässig.", "Das ist okay, wenn es sonst niemand erfährt.", "Zustimmung gilt nur so weit, wie sie gegeben wurde."], ["Du merkst, dass du jemandem Druck gemacht hast. Was ist der beste Schritt?", "Aufhören, mich entschuldigen und das Nein respektieren.", "Es ignorieren.", "Sagen, die Person sei zu empfindlich.", "Einen Fehler zuzugeben und es zu ändern ist stark."], ["Was unterscheidet Fragen von Überreden?", "Fragen lässt Raum für Nein, Überreden macht Druck bis zum Ja.", "Nichts, beides ist gleich.", "Überreden ist höflicher.", "Beim Überreden zählt nur das Ja, nicht die Meinung der Person."], ["Jemand sagt: 'Ich habe doch nie Nein gesagt!' Was stimmt?", "Zustimmung braucht ein Ja, fehlendes Nein reicht nicht.", "Stimmt, dann darf man alles.", "Das Nein muss eben lauter sein.", "Die Verantwortung liegt bei der Person, die etwas möchte."], ["Jemand bittet im Gruppenchat, nicht mehr mit einem Spitznamen angesprochen zu werden. Alle finden ihn lustig.", "Wir hören auf. Grenzen gelten auch für Namen und Witze.", "Wir machen weiter, es ist ja nur ein Spitzname.", "Wir stimmen in der Gruppe darüber ab.", "Wie man genannt werden möchte, entscheidet jede Person selbst."], ["Wer ist dafür verantwortlich, Zustimmung einzuholen?", "Die Person, die etwas möchte oder vorschlägt.", "Die Person, die Nein sagen müsste.", "Niemand, das regelt sich von selbst.", "Wer etwas will, fragt auch."], ["Warum sollte ein Nein ohne Erklärung akzeptiert werden?", "Weil niemand sich rechtfertigen muss, um Grenzen zu haben.", "Weil Erklärungen unhöflich sind.", "Weil Gründe egal sind und man weitermachen darf.", "Sonst wird das Nein verhandelt und man fühlt sich schuldig."]]};
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const BREITE=1100, HOEHE=700, TW=110, TH=55, OX=440, OY=105, ANZAHL_FELDER=24;
+const START_COINS=100, RUNDEN_AUSWAHL=[1,2,3,4,5];
+const WUERFEL_BILDER = 46;   // Würfel-Animation immer an, auch auf dem Handy
+const HINTERGRUND="#2f6fd6", PANEL="#2557b5", TEXT_HELL="#f1f5f9", TEXT_GRAU="#dcecff";
+const SPIELER_FARBEN=["#e63946","#2d7ff9","#2fb344","#f5b800"];
+const PREISE={1:10,2:20,3:30,4:40};
+const NAMEN={1:"Einfach",2:"Mittel",3:"Schwer",4:"Sehr schwer"};
+const FARBEN={1:"#22c55e",2:"#f59e0b",3:"#ef4444",4:"#a855f7"};
+const FELD_SCHWER=[1,2,1,3,2,1,4, 2,1,3,2,4,1,2, 3,1,4,2,1,3, 2,4,1];
+const WEG=[];
+for(let gx=0;gx<7;gx++)WEG.push([gx,0]);
+for(let gy=1;gy<7;gy++)WEG.push([6,gy]);
+for(let gx=5;gx>=0;gx--)WEG.push([gx,6]);
+for(let gy=5;gy>0;gy--)WEG.push([0,gy]);
+const ECK=new Set([0,6,12,18]);
+const feldHoehe=i=>ECK.has(i)?20:12;
+const feldStufe=(i,m)=>m===0?FELD_SCHWER[i-1]:m;
+const feldFarbe=(i,m)=>i===0?"#facc15":FARBEN[feldStufe(i,m)];
+const iso=(gx,gy,z=0)=>[OX+(gx-gy)*TW/2, OY+(gx+gy)*TH/2-z];
+function abdunkeln(f,k){const c=n=>Math.max(0,Math.min(255,Math.floor(parseInt(f.substr(n,2),16)*k)));
+  return "#"+[1,3,5].map(n=>c(n).toString(16).padStart(2,"0")).join("");}
+
+// ---- 3D-Mathe für den Würfel
+const mm=(a,b)=>[0,1,2].map(i=>[0,1,2].map(j=>a[i][0]*b[0][j]+a[i][1]*b[1][j]+a[i][2]*b[2][j]));
+const mv=(m,v)=>[0,1,2].map(i=>m[i][0]*v[0]+m[i][1]*v[1]+m[i][2]*v[2]);
+const rotX=w=>{const c=Math.cos(w),s=Math.sin(w);return [[1,0,0],[0,c,-s],[0,s,c]];};
+const rotY=w=>{const c=Math.cos(w),s=Math.sin(w);return [[c,0,s],[0,1,0],[-s,0,c]];};
+const rotZ=w=>{const c=Math.cos(w),s=Math.sin(w);return [[c,-s,0],[s,c,0],[0,0,1]];};
+function rotAchse(a,w){let [x,y,z]=a;const l=Math.hypot(x,y,z);x/=l;y/=l;z/=l;
+  const c=Math.cos(w),s=Math.sin(w),t=1-c;
+  return [[t*x*x+c,t*x*y-s*z,t*x*z+s*y],[t*x*y+s*z,t*y*y+c,t*y*z-s*x],[t*x*z-s*y,t*y*z+s*x,t*z*z+c]];}
+const FLAECHEN={1:[[0,0,1],[1,0,0],[0,1,0]],6:[[0,0,-1],[1,0,0],[0,1,0]],
+  2:[[1,0,0],[0,1,0],[0,0,1]],5:[[-1,0,0],[0,1,0],[0,0,1]],
+  3:[[0,1,0],[1,0,0],[0,0,1]],4:[[0,-1,0],[1,0,0],[0,0,1]]};
+const AUGEN={1:[[0,0]],2:[[-1,-1],[1,1]],3:[[-1,-1],[0,0],[1,1]],4:[[-1,-1],[1,-1],[-1,1],[1,1]],
+  5:[[-1,-1],[1,-1],[0,0],[-1,1],[1,1]],6:[[-1,-1],[-1,0],[-1,1],[1,-1],[1,0],[1,1]]};
+function obenDrehung(w){const n=FLAECHEN[w][0];
+  if(n[2]===1)return [[1,0,0],[0,1,0],[0,0,1]];
+  if(n[2]===-1)return rotX(Math.PI);
+  return rotAchse([n[1],-n[0],0],Math.PI/2);}
+
+const mischen=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function baueDecks(n){
+  const decks=Array.from({length:n},()=>({}));
+  for(const d of [1,2,3,4]){
+    const q=mischen(POOL[d]);
+    for(let p=0;p<n;p++){
+      const eigene=q.slice(p*4,p*4+4);
+      decks[p][d]=eigene.concat(mischen(q.filter(x=>!eigene.includes(x))));
+    }
+  }
+  return decks;
+}
+
+// ---- Canvas-Helfer
+const cv=$("cv"), c=cv.getContext("2d");
+// Scharf zeichnen: Pixelanzahl der echten Anzeigegroesse anpassen (inkl. Retina), Spielkoordinaten bleiben 1100x700
+function schaerfe(){
+  const cw=cv.clientWidth;if(!cw)return;
+  const dpr=Math.max(1,window.devicePixelRatio||1);
+  const w=Math.min(4096,Math.max(BREITE,Math.round(cw*dpr)));
+  if(cv.width===w)return;
+  cv.width=w;cv.height=Math.round(w*HOEHE/BREITE);
+  c.setTransform(w/BREITE,0,0,w/BREITE,0,0);
+  if(window.__spiel&&window.__spiel.knoepfe)zeichnen();
+}
+const font=(size,bold)=>`${bold?"bold ":""}${size}px Helvetica, Arial, "DejaVu Sans", sans-serif`;
+function poly(pts,fill,outline,lw=1){c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();
+  if(fill){c.fillStyle=fill;c.fill();} if(outline){c.strokeStyle=outline;c.lineWidth=lw;c.lineJoin="round";c.stroke();}}
+function rect(x0,y0,x1,y1,fill,outline,lw=1){if(fill){c.fillStyle=fill;c.fillRect(x0,y0,x1-x0,y1-y0);}
+  if(outline){c.strokeStyle=outline;c.lineWidth=lw;c.strokeRect(x0,y0,x1-x0,y1-y0);}}
+function oval(x0,y0,x1,y1,fill,outline,lw=1){c.beginPath();c.ellipse((x0+x1)/2,(y0+y1)/2,Math.abs(x1-x0)/2,Math.abs(y1-y0)/2,0,0,7);
+  if(fill){c.fillStyle=fill;c.fill();} if(outline){c.strokeStyle=outline;c.lineWidth=lw;c.stroke();}}
+function line(x0,y0,x1,y1,col){c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.strokeStyle=col;c.lineWidth=1;c.stroke();}
+function text(x,y,s,fill,size,bold,anchor="c",width=0){
+  c.font=font(size,bold);c.fillStyle=fill;c.textBaseline="middle";
+  const lines=[];
+  String(s).split("\n").forEach(par=>{
+    if(!width){lines.push(par);return;}
+    let akt="";par.split(" ").forEach(w=>{const pr=akt?akt+" "+w:w;
+      if(akt&&c.measureText(pr).width>width){lines.push(akt);akt=w;}else akt=pr;});
+    lines.push(akt);
+  });
+  const lh=size*1.25, h=lh*lines.length;
+  const top=(anchor==="nw")?y:y-h/2;
+  c.textAlign=anchor==="w"||anchor==="nw"?"left":anchor==="e"?"right":"center";
+  lines.forEach((l,k)=>c.fillText(l,x,top+lh*k+lh/2));
+}
+
+// ---- Spiel
+let S={};
+function neuStarten(){
+  const keep={ap:S.ap||2, ar:S.ar||5, as:S.as||0};
+  S={spieler:[],amZug:0,runde:1,maxRunden:keep.ar,modus:keep.as,zustand:"START",
+     wuerfel:1,huepfen:0,zielPos:0,wuerfelT:1,wuerfelYaw:0.5,spin:[0,0,0],wurfStart:[0,0],
+     frage:null,optionen:[],gewaehlt:null,auswahl:null,rf:false,endGrund:"",sieger:-1,einsatz:0,schwer:1,infoText:"",knoepfe:[],
+     ap:keep.ap, ar:keep.ar, as:keep.as, rollBild:0};
+  window.__spiel=S;
+  zeichnen();
+}
+const aktueller=()=>S.spieler[S.amZug];
+function start(){
+  vollbild(true);
+  const decks=baueDecks(S.ap);
+  S.spieler=decks.map((d,i)=>({nummer:i+1,name:"Spieler "+(i+1),farbe:SPIELER_FARBEN[i],pos:0,coins:START_COINS,deck:d,idx:{1:0,2:0,3:0,4:0},rettung:true}));
+  S.amZug=0;S.runde=1;S.maxRunden=S.ar;S.modus=S.as;S.zustand="WUERFELN";zeichnen();
+}
+function wuerfeln(){
+  if(S.zustand!=="WUERFELN")return;
+  S.zustand="ROLLT";
+  S.wuerfel=1+Math.floor(Math.random()*6);
+  S.wuerfelYaw=rnd(0,2*Math.PI);
+  S.spin=[0,1,2].map(()=>pick([-1,1])*rnd(3.5,6.5)*Math.PI);
+  S.wurfStart=[pick([-1,1])*(70+Math.floor(Math.random()*51)), -(30+Math.floor(Math.random()*51))];
+  S.rollBild=0;rollSchritt();
+}
+function rollSchritt(){
+  S.rollBild++;S.wuerfelT=Math.min(1,S.rollBild/WUERFEL_BILDER);zeichnen();
+  if(S.rollBild<WUERFEL_BILDER)setTimeout(rollSchritt,30);else setTimeout(bewegungStarten,500);
+}
+function bewegungStarten(){const s=aktueller();S.zielPos=s.pos+S.wuerfel;S.zustand="ZIEHT";S.huepfen=0;huepfSchritt();}
+function huepfSchritt(){
+  const s=aktueller();S.huepfen+=0.12;
+  if(S.huepfen>=1){s.pos++;S.huepfen=0;if(s.pos>=S.zielPos){angekommen();return;}}
+  zeichnen();setTimeout(huepfSchritt,25);
+}
+function frageZiehen(s,stufe){const d=s.deck[stufe];const q=d[s.idx[stufe]%d.length];s.idx[stufe]++;return q;}
+function angekommen(){
+  const s=aktueller(), feld=s.pos%ANZAHL_FELDER;
+  if(feld===0){S.infoText="Startfeld: Hier ist Pause.\nKeine Frage und keine Kosten.";S.zustand="INFO";}
+  else{
+    const stufe=feldStufe(feld,S.modus),preis=PREISE[stufe];
+    if(s.coins<preis&&s.rettung){
+      s.rettung=false;S.rf=true;S.einsatz=0;S.schwer=2;
+      const [q,r,f1,f2,erkl]=frageZiehen(s,2);
+      S.frage={q,erkl};S.optionen=mischen([[r,true],[f1,false],[f2,false]]);S.gewaehlt=null;S.auswahl=null;S.zustand="FRAGE";
+    }
+    else if(s.coins<preis){S.infoText=`Dieses Feld kostet ${preis} Coins, du hast nur ${s.coins}.\nDu setzt diese Runde aus.`;S.zustand="INFO";}
+    else{
+      s.coins-=preis;S.einsatz=preis;S.schwer=stufe;
+      const [q,r,f1,f2,erkl]=frageZiehen(s,stufe);
+      S.rf=false;S.frage={q,erkl};S.optionen=mischen([[r,true],[f1,false],[f2,false]]);S.gewaehlt=null;S.auswahl=null;S.zustand="FRAGE";
+    }
+  }
+  zeichnen();
+}
+const RETTUNG_PREIS=30;
+function waehlen(i){
+  if(S.zustand!=="FRAGE"||!(i>=0&&i<S.optionen.length))return;
+  S.auswahl=i;zeichnen();
+}
+function antworten(){
+  if(S.zustand!=="FRAGE"||S.auswahl===null)return;
+  const i=S.auswahl;
+  S.gewaehlt=i;
+  if(S.optionen[i][1])aktueller().coins+=S.rf?RETTUNG_PREIS:2*S.einsatz;
+  S.zustand="ANTWORT";zeichnen();
+}
+const fertig=s=>s.weg||s.pos>=ANZAHL_FELDER*S.maxRunden;
+const rundeVon=s=>Math.min(Math.floor(s.pos/ANZAHL_FELDER)+1,S.maxRunden);
+function weiter(){
+  const n=S.spieler.length;let gefunden=false;
+  const lebt=s=>fertig(s)?s.coins>0:(s.coins>=PREISE[1]||s.rettung);
+  const da=S.spieler.map((s,i)=>lebt(s)?i:-1).filter(i=>i>=0);
+  if(n>1&&da.length===1){
+    S.sieger=da[0];S.endGrund=S.spieler[da[0]].name+" ist als Einziger noch im Spiel. Alle anderen haben keine Coins mehr.";
+    S.zustand="ENDE";endeStart();zeichnen();return;
+  }
+  for(let k=0;k<n;k++){
+    S.amZug=(S.amZug+1)%n;
+    const s=aktueller();
+    if(!fertig(s)&&(s.coins>=PREISE[1]||s.rettung)){gefunden=true;break;}
+  }
+  S.zustand=gefunden?"WUERFELN":"ENDE";
+  if(!gefunden){S.sieger=-1;S.endGrund="";endeStart();}
+  zeichnen();
+}
+
+// ---- Zeichnen
+function wolke(x,y,s){c.fillStyle="rgba(255,255,255,.92)";c.beginPath();
+  [[0,0,34],[34,-12,42],[78,-2,36],[40,8,40],[10,10,28],[66,12,30]].forEach(([dx,dy,r])=>{c.moveTo(x+dx*s+r*s,y+dy*s);c.arc(x+dx*s,y+dy*s,r*s,0,7);});c.fill();}
+let hgCache=null;
+function zeichneHintergrund(){
+  const gr=c.createLinearGradient(0,0,0,HOEHE);
+  gr.addColorStop(0,"#7fe0ff");gr.addColorStop(0.45,"#5aa7ff");gr.addColorStop(1,"#8f6bff");
+  c.fillStyle=gr;c.fillRect(0,0,BREITE,HOEHE);
+  // Sonne mit Strahlen
+  c.save();c.translate(95,85);
+  c.strokeStyle="rgba(255,236,120,.55)";c.lineWidth=7;c.lineCap="round";
+  for(let k=0;k<12;k++){const a=k*Math.PI/6;c.beginPath();c.moveTo(Math.cos(a)*52,Math.sin(a)*52);c.lineTo(Math.cos(a)*74,Math.sin(a)*74);c.stroke();}
+  c.fillStyle="#ffe066";c.beginPath();c.arc(0,0,40,0,7);c.fill();c.restore();
+  // Wolken
+  wolke(250,70,1.0);wolke(560,40,0.75);wolke(760,110,0.9);wolke(60,610,0.9);wolke(430,640,1.1);wolke(720,600,0.8);
+  // Konfetti und Sterne
+  if(!hgCache){hgCache=[];let z=12345;const r=()=>{z=(z*16807)%2147483647;return z/2147483647;};
+    const cols=["#ffd23f","#ff6b6b","#2ec4b6","#ffffff","#ff8fc8","#3ddc84"];
+    for(let i=0;i<46;i++)hgCache.push([r()*BREITE,r()*HOEHE,3+r()*5,cols[Math.floor(r()*cols.length)],r()*6.28,Math.floor(r()*3)]);}
+  for(const [x,y,s,col,rot,typ] of hgCache){
+    c.save();c.translate(x,y);c.rotate(rot);c.globalAlpha=0.55;c.fillStyle=col;
+    if(typ===0)c.fillRect(-s,-s/2,s*2,s);else if(typ===1){c.beginPath();c.arc(0,0,s*0.7,0,7);c.fill();}
+    else{c.beginPath();for(let k=0;k<8;k++){const rr=k%2?s*0.5:s*1.5,a=k*Math.PI/4;c.lineTo(Math.cos(a)*rr,Math.sin(a)*rr);}c.closePath();c.fill();}
+    c.restore();
+  }
+  c.globalAlpha=1;
+}
+function zeichnen(){
+  zeichneHintergrund();
+  S.knoepfe=[];
+  zeichneBrett();zeichneWuerfel();zeichneFiguren();zeichneSeitenleiste();zeichneUnten();
+  if(S.zustand==="START")zeichneStart();
+  else if(S.zustand==="FRAGE"||S.zustand==="ANTWORT")zeichneFrage();
+  else if(S.zustand==="INFO")zeichneInfo();
+  else if(S.zustand==="ENDE")zeichneEnde();
+  else if(S.zustand==="HOSTWEG")zeichneHostWeg();
+  publish();
+}
+function quader(x0,y0,x1,y1,z0,z1,farbe,linieF){
+  const li=linieF||abdunkeln(farbe,0.55);
+  poly([iso(x0,y1,z1),iso(x1,y1,z1),iso(x1,y1,z0),iso(x0,y1,z0)],abdunkeln(farbe,0.78),li);
+  poly([iso(x1,y1,z1),iso(x1,y0,z1),iso(x1,y0,z0),iso(x1,y1,z0)],abdunkeln(farbe,0.58),li);
+  const oben=[iso(x0,y0,z1),iso(x1,y0,z1),iso(x1,y1,z1),iso(x0,y1,z1)];
+  poly(oben,farbe,li);return oben;
+}
+function zeichneBrett(){
+  quader(-0.4,-0.4,7.4,7.4,-20,0,"#245bb8","#1b4796");
+  quader(1,1,6,6,0,3,"#5ba0f2","#4a8de0");
+  for(let k=2;k<6;k++){let a=iso(k,1,3),b=iso(k,6,3);line(a[0],a[1],b[0],b[1],"#8cc2fb");
+    a=iso(1,k,3);b=iso(6,k,3);line(a[0],a[1],b[0],b[1],"#8cc2fb");}
+  const t=iso(3.5,2,3);
+  text(t[0],t[1],"KONSENS-QUEST","#ffe066",22,true);
+  text(t[0],t[1]+24,"Einsatz, Frage, Gewinn",TEXT_GRAU,12,false);
+  let aktuell=null;
+  if(S.spieler.length&&["WUERFELN","FRAGE","ANTWORT","INFO"].includes(S.zustand))aktuell=aktueller().pos%ANZAHL_FELDER;
+  const reihe=[...Array(ANZAHL_FELDER).keys()].sort((a,b)=>(WEG[a][0]+WEG[a][1])-(WEG[b][0]+WEG[b][1])||WEG[a][0]-WEG[b][0]);
+  for(const i of reihe){
+    const [gx,gy]=WEG[i],h=feldHoehe(i),ff=feldFarbe(i,S.modus);
+    const oben=quader(gx+0.02,gy+0.02,gx+0.98,gy+0.98,0,h,ff);
+    const [mx,my]=iso(gx+0.5,gy+0.5,h);
+    if(i===0){text(mx,my-4,"START","#3b2f00",11,true);text(mx,my+9,"Pause","#3b2f00",10,false);}
+    else{
+      const preis=PREISE[feldStufe(i,S.modus)];
+      text(mx+1,my-3,String(i),abdunkeln(ff,0.45),15,true);
+      text(mx,my-4,String(i),"white",15,true);
+      text(mx,my+10,preis+" Coins","white",9,true);
+    }
+    if(aktuell!==null&&i===aktuell&&i!==0)poly(oben,null,"white",3);
+  }
+}
+function wuerfelDrehung(t){
+  const s=(1-t)**2,[ax,ay,az]=S.spin;
+  const spin=mm(rotZ(az*s),mm(rotY(ay*s),rotX(ax*s)));
+  return mm(spin,mm(rotZ(S.wuerfelYaw),obenDrehung(S.wuerfel)));
+}
+function zeichneWuerfel(){
+  const t=S.wuerfelT,a=24,R=wuerfelDrehung(t);
+  let hoehe=0;if(t<1)hoehe=120*(1-t)**1.7*Math.abs(Math.cos(3*Math.PI*t));
+  const gx=OX+S.wurfStart[0]*(1-t)**2, gy=OY+262+S.wurfStart[1]*(1-t)**2;
+  const zc=hoehe+a*(Math.abs(R[2][0])+Math.abs(R[2][1])+Math.abs(R[2][2]));
+  const an=Math.min(1,hoehe/120),br=a*1.9*(1-0.45*an);
+  oval(gx-br,gy-br*0.45,gx+br,gy+br*0.45,an<0.5?"#2a62c4":"#3a73d4");
+  const proj=(x,y,z)=>[gx+(x-y)*0.866, gy+(x+y)*0.5-(z+zc)];
+  const licht=[0.35,-0.25,0.9],ll=Math.hypot(...licht);
+  for(const w of [1,2,3,4,5,6]){
+    const [n,u,v]=FLAECHEN[w],nw=mv(R,n);
+    if(nw[0]+nw[1]+nw[2]<=0.02)continue;
+    const ecken=[[-1,-1],[1,-1],[1,1],[-1,1]].map(([su,sv])=>{
+      const l=[0,1,2].map(k=>(n[k]+su*u[k]+sv*v[k])*a),q=mv(R,l);return proj(q[0],q[1],q[2]);});
+    const hell=(nw[0]*licht[0]+nw[1]*licht[1]+nw[2]*licht[2])/ll;
+    const g=Math.floor(250*(0.62+0.38*Math.max(0,hell)));
+    poly(ecken,`rgb(${g},${g},${Math.min(255,g+3)})`,"#8b95a7");
+    for(const [pu,pv] of AUGEN[w]){
+      const kreis=[];
+      for(let k=0;k<10;k++){const ang=2*Math.PI*k/10,r=a*0.15;
+        const l=[0,1,2].map(m=>n[m]*a*1.01+u[m]*pu*a*0.5+v[m]*pv*a*0.5+(u[m]*Math.cos(ang)+v[m]*Math.sin(ang))*r);
+        const q=mv(R,l);kreis.push(proj(q[0],q[1],q[2]));}
+      poly(kreis,"#1f2937");
+    }
+  }
+}
+function figurPosition(s){
+  const a=s.pos,offs=[[-0.2,-0.2],[0.2,-0.2],[-0.2,0.2],[0.2,0.2]][s.nummer-1];
+  let t=0;if(S.zustand==="ZIEHT"&&s===aktueller())t=S.huepfen;
+  const [ax,ay]=WEG[a%24],[bx,by]=WEG[(a+1)%24];
+  const ha=feldHoehe(a%24),hb=feldHoehe((a+1)%24);
+  return [ax+(bx-ax)*t+0.5+offs[0], ay+(by-ay)*t+0.5+offs[1], ha+(hb-ha)*t, 24*Math.sin(Math.PI*t)];
+}
+function zeichneFiguren(){
+  if(!S.spieler.length)return;
+  const l=S.spieler.map(s=>{const [gx,gy,z,sp]=figurPosition(s);return {s,gx,gy,z,sp};}).sort((a,b)=>(a.gx+a.gy)-(b.gx+b.gy));
+  for(const {s,gx,gy,z,sp} of l){
+    const [bx,by]=iso(gx,gy,z);
+    oval(bx-12,by-5,bx+12,by+5,"#111827");
+    const x=bx,y=by-sp,d=abdunkeln(s.farbe,0.6);
+    oval(x-12,y-6,x+12,y+6,d);
+    poly([[x-10,y],[x+10,y],[x+4,y-28],[x-4,y-28]],s.farbe,d);
+    oval(x-9,y-44,x+9,y-26,s.farbe,d,2);
+    oval(x-5,y-40,x-1,y-36,"white");
+    if(s===aktueller()&&["WUERFELN","FRAGE","ANTWORT","INFO"].includes(S.zustand))text(x,y-56,"▼","white",14,true);
+  }
+}
+function zeichneSeitenleiste(){
+  rect(870,20,1085,680,PANEL,"#a8d2ff",2);
+  text(977,45,"SPIELER",TEXT_HELL,15,true);
+  S.spieler.forEach((s,i)=>{
+    const y=85+i*62,dran=(i===S.amZug&&!["START","ENDE"].includes(S.zustand));
+    if(dran)rect(880,y-28,1075,y+30,"#3f78d0",s.farbe,2);
+    oval(892,y-12,916,y+12,s.farbe,"white",2);
+    text(926,y-12,s.name,TEXT_HELL,14,true,"w");
+    text(926,y+10,"Coins: "+s.coins+(fertig(s)?"  (im Ziel)":s.coins<PREISE[1]?(s.rettung?"  (Rettung!)":"  (pleite)"):"  ·  Runde "+rundeVon(s)+"/"+S.maxRunden),TEXT_GRAU,12,false,"w");
+    oval(1048,y-24,1068,y-4,s.rettung?"#facc15":"#64748b","white",2);text(1058,y-14,"R",s.rettung?"#78350f":"#cbd5e1",11,true);
+  });
+  if(S.spieler.length)text(977,335,`Runde ${rundeVon(aktueller())} von ${S.maxRunden}`,"#facc15",14,true);
+  text(977,375,"PREISE",TEXT_HELL,15,true);
+  const stufen=S.modus===0?[1,2,3,4]:[S.modus];let y=410;
+  for(const k of stufen){rect(895,y-9,913,y+9,FARBEN[k],"white");text(925,y,`${NAMEN[k]}: ${PREISE[k]} Coins`,TEXT_HELL,12,false,"w");y+=30;}
+  if(S.modus!==0){text(925,y-2,"(alle Felder)",TEXT_GRAU,11,false,"w");y+=22;}
+  y+=1;rect(895,y-9,913,y+9,"#facc15","white");text(925,y,"Start: Pause",TEXT_HELL,12,false,"w");
+  text(977,590,"Richtig = doppelter Einsatz",TEXT_GRAU,12,false);
+  text(977,615,"Falsch = Einsatz weg",TEXT_GRAU,12,false);
+  text(977,640,"Start: "+START_COINS+" Coins",TEXT_GRAU,12,false);
+  text(977,662,"R = Rettungs-Coin (1x)","#facc15",11,false);
+}
+function knopf(x0,y0,x1,y1,txt,aktion,farbe="#3b82f6",size=16,markiert=false){
+  rect(x0,y0+5,x1,y1+5,abdunkeln(farbe,0.55));
+  rect(x0,y0,x1,y1,farbe,abdunkeln(farbe,0.7),2);
+  if(markiert)rect(x0-4,y0-4,x1+4,y1+4,null,"#facc15",4);
+  text((x0+x1)/2,(y0+y1)/2,txt,"white",size,true,"c",(x1-x0)-20);
+  if(aktion)S.knoepfe.push([x0,y0,x1,y1,aktion]);
+}
+function zeichneUnten(){
+  if(!S.spieler.length||["START","ENDE"].includes(S.zustand))return;
+  const s=aktueller();let t="";
+  if(S.zustand==="WUERFELN")t=s.name+(meinZug()?" ist dran. Würfle!":" ist dran ...");
+  else if(S.zustand==="ROLLT")t="Der Würfel rollt ...";
+  else if(S.zustand==="ZIEHT")t=`${s.name} hat eine ${S.wuerfel} gewürfelt.`;
+  else t=`${s.name} steht auf Feld ${s.pos%ANZAHL_FELDER}.`;
+  text(OX,560,t,TEXT_HELL,17,true);
+  if(S.zustand==="WUERFELN"){if(meinZug())knopf(OX-130,590,OX+130,655,"WÜRFELN",()=>send("roll"),s.farbe,22);}
+}
+function panel(x0,y0,x1,y1){rect(x0+8,y0+8,x1+8,y1+8,"#1b3a7a");rect(x0,y0,x1,y1,"#f8fafc","#1e293b",3);}
+function zeichneStart(){
+  const on=ON.active,host=!on||ON.isHost;
+  panel(150,100,730,600);rect(150,100,730,175,"#1e293b","#1e293b");
+  text(440,128,"KONSENS-QUEST","#facc15",30,true);
+  text(440,160,on?"Online-Raum  "+ON.code:"Setze Coins, beantworte Fragen, gewinne mehr","white",13,false);
+  text(180,186,`1.  Jeder startet mit ${START_COINS} Coins.\n2.  Jedes Feld hat einen Preis: 10, 20, 30 oder 40 Coins.\n3.  Richtig: Doppelter Einsatz zurück. Falsch: Einsatz weg.\n4.  Eine Runde ist einmal ums ganze Brett (über das Startfeld).\n5.  Antwort antippen, dann BESTÄTIGEN. Erst dann zählt sie.\n6.  Rettungs-Coin (1x): Zu wenig Coins? Dann gibt es eine Gratis-Frage, richtig = +30 Coins.\n7.  Hat nur noch einer Coins, gewinnt er sofort. Sonst gewinnen die meisten Coins.`,"#1e293b",11,false,"nw",520);
+  if(on){
+    const l=lobbySpieler();
+    text(440,290,`Spieler im Raum (${l.length}/4)`,"#1e293b",15,true);
+    const w=130,x0=440-(l.length*w)/2;
+    l.forEach((p,k)=>{const x=x0+k*w+w/2;oval(x-60,306,x-40,326,SPIELER_FARBEN[k],"#1e293b",2);text(x-34,316,p.name+(p.host?" (Host)":""),"#0f172a",12,true,"w",w-42);});
+  }else{
+    text(440,290,"Wie viele Spieler?","#1e293b",15,true);
+    [2,3,4].forEach((n,k)=>{const x=278+k*115;knopf(x,306,x+95,348,String(n),()=>{S.ap=n;zeichnen();},n===S.ap?"#2563eb":"#94a3b8",20,n===S.ap);});
+  }
+  text(440,366,"Wie viele Runden? (höchstens 5)","#1e293b",15,true);
+  RUNDEN_AUSWAHL.forEach((n,k)=>{const x=210+k*95;knopf(x,382,x+80,424,String(n),host?()=>{S.ar=n;S.maxRunden=n;zeichnen();}:null,n===S.maxRunden?"#2563eb":"#94a3b8",20,n===S.maxRunden);});
+  text(440,442,"Wie schwer soll es sein?","#1e293b",15,true);
+  [[0,"Gemischt"],[1,NAMEN[1]],[2,NAMEN[2]],[3,NAMEN[3]],[4,NAMEN[4]]].forEach(([n,name],k)=>{
+    const x=158+k*114;let f=n?FARBEN[n]:"#2563eb";if(n!==S.modus)f="#94a3b8";
+    knopf(x,458,x+108,504,name,host?()=>{S.as=n;S.modus=n;zeichnen();}:null,f,12,n===S.modus);});
+  const ms=S.modus;
+  text(440,520,ms===0?"Gemischt: Die Felder kosten 10 bis 40 Coins.":`${NAMEN[ms]}: Alle Felder kosten ${PREISE[ms]} Coins und haben ${NAMEN[ms].toLowerCase()}-Fragen.`,"#475569",11,false);
+  if(!on)knopf(300,535,580,590,"SPIEL STARTEN",start,"#16a34a",18);
+  else if(host){
+    if(lobbySpieler().length>=2)knopf(300,535,580,590,"SPIEL STARTEN",startOnline,"#16a34a",18);
+    else {knopf(300,535,580,590,"WARTE AUF MITSPIELER",null,"#94a3b8",16);}
+  }else text(440,562,"Warte, bis der Host das Spiel startet ...","#0f172a",16,true);
+}
+function zeichneFrage(){
+  const s=aktueller(),f=S.frage,farbe=FARBEN[S.schwer];
+  panel(100,70,780,650);rect(100,70,780,120,farbe,farbe);
+  text(120,95,S.rf?`RETTUNGS-COIN  -  Gratis-Frage  -  richtig = +${RETTUNG_PREIS} Coins`:`Feld ${s.pos%ANZAHL_FELDER}  -  ${NAMEN[S.schwer]}  -  Einsatz ${S.einsatz} Coins`,"white",15,true,"w");
+  oval(742,83,764,105,s.farbe,"white",2);
+  text(734,95,s.name,"white",14,true,"e");
+  text(125,140,f.q,"#0f172a",18,true,"nw",630);
+  S.optionen.forEach(([t,richtig],k)=>{
+    const y0=235+k*82,y1=y0+68;let fu="#e2e8f0",ra="#64748b",sc="#0f172a",akt=meinZug()?(()=>send("sel",k)):null;
+    if(S.zustand==="ANTWORT"){akt=null;
+      if(richtig){fu="#86efac";ra="#15803d";sc="#052e16";}
+      else if(k===S.gewaehlt){fu="#fca5a5";ra="#b91c1c";sc="#450a0a";}
+      else{fu="#f1f5f9";ra="#cbd5e1";sc="#64748b";}}
+    if(S.zustand==="FRAGE"&&S.auswahl===k){fu="#fef08a";ra="#ca8a04";}
+    rect(125,y0+4,755,y1+4,"#94a3b8");rect(125,y0,755,y1,fu,ra,S.auswahl===k&&S.zustand==="FRAGE"?4:2);
+    text(145,(y0+y1)/2,`${"ABC"[k]})  ${t}`,sc,14,true,"w",590);
+    if(akt)S.knoepfe.push([125,y0,755,y1,akt]);
+  });
+  if(S.zustand==="FRAGE"){
+    if(S.auswahl===null)text(125,500,meinZug()?"Tippe eine Antwort an.":s.name+" überlegt ...","#475569",14,true,"nw",470);
+    else{
+      text(125,500,meinZug()?"Sicher? Tippe auf BESTÄTIGEN oder wähle eine andere Antwort.":s.name+" überlegt ...","#475569",14,true,"nw",470);
+      if(meinZug())knopf(560,570,755,630,"BESTÄTIGEN",()=>send("ans"),"#16a34a",18);
+    }
+  }
+  if(S.zustand==="ANTWORT"){
+    const ok=S.optionen[S.gewaehlt][1];
+    text(125,490,ok?(S.rf?`Richtig! Gerettet: +${RETTUNG_PREIS} Coins.`:`Richtig! Du bekommst ${2*S.einsatz} Coins (doppelter Einsatz).`):(S.rf?"Leider falsch. Der Rettungs-Coin ist verbraucht.":`Leider falsch. Dein Einsatz von ${S.einsatz} Coins ist weg.`),ok?"#15803d":"#b91c1c",16,true,"nw",630);
+    text(125,522,f.erkl,"#0f172a",14,false,"nw",470);
+    if(meinZug())knopf(620,570,755,630,"WEITER",()=>send("next"),"#2563eb");
+  }
+}
+function zeichneInfo(){
+  const s=aktueller();panel(190,230,690,450);
+  text(440,275,s.name,s.farbe,22,true);
+  text(440,330,S.infoText,"#0f172a",16,false,"c",440);
+  if(meinZug())knopf(340,375,540,430,"WEITER",()=>send("next"),"#2563eb");
+}
+let endT0=0,endLoop=false;
+function endeStart(){endT0=performance.now();if(!endLoop){endLoop=true;(function f(){if(S.zustand==="ENDE"){zeichnen();requestAnimationFrame(f);}else endLoop=false;})();}}
+function zeichneEnde(){
+  const t=(performance.now()-endT0)/1000;
+  let rang=S.spieler.map((s,i)=>({s,i})).sort((a,b)=>b.s.coins-a.s.coins);
+  if(S.sieger>=0){const k=rang.findIndex(r=>r.i===S.sieger);rang=[rang[k]].concat(rang.filter((_,j)=>j!==k));}
+  rang=rang.map(r=>r.s);
+  panel(150,100,730,600);rect(150,100,730,175,"#1e293b","#1e293b");
+  text(440,138,"SIEGERPODEST","#facc15",30,true);
+  const sieger=S.sieger>=0?[rang[0].name]:rang.filter(s=>s.coins===rang[0].coins).map(s=>s.name);
+  text(440,200,sieger.length===1?sieger[0]+" gewinnt!":"Unentschieden: "+sieger.join(" und "),"#0f172a",22,true,"c",520);
+  if(S.endGrund)text(440,226,S.endGrund,"#475569",12,false,"c",520);
+  // Konfetti
+  const cols=["#ef4444","#facc15","#22c55e","#3b82f6","#ec4899","#f97316"];
+  for(let k=0;k<46;k++){
+    const x=160+((k*131)%560)+Math.sin(t*2+k)*10,y=178+((t*70+k*47)%420);
+    rect(x,y,x+7,y+5,cols[k%6]);
+  }
+  // Podest
+  const cx=440,base=475;
+  const st=[[rang[1],cx-190,cx-65,80,"#cbd5e1","2"],[rang[0],cx-65,cx+65,115,"#facc15","1"],[rang[2],cx+65,cx+190,55,"#fdba74","3"]];
+  // Sonnenstrahlen hinter dem Sieger
+  for(let k=0;k<14;k++){const a=t*0.6+k*Math.PI/7;
+    const x0=cx+Math.cos(a)*40,y0=335+Math.sin(a)*40,x1=cx+Math.cos(a)*85,y1=335+Math.sin(a)*85;
+    if(y1>240&&y1<base-110){c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.strokeStyle="#fde047";c.lineWidth=5;c.lineCap="round";c.stroke();}}
+  st.forEach(([sp,x0,x1,h,farbe,nr])=>{
+    if(!sp)return;
+    const top=base-h,gew=nr==="1";
+    rect(x0,top,x1,base,farbe,"#1e293b",3);
+    text((x0+x1)/2,top+26,nr,"#1e293b",gew?34:26,true);
+    text((x0+x1)/2,top+h-22,sp.name,"#1e293b",12,true,"c",x1-x0-8);
+    text((x0+x1)/2,top+h-8,sp.coins+" Coins","#334155",11,false,"c",x1-x0-8);
+    const hop=gew?Math.abs(Math.sin(t*4))*22:0,px=(x0+x1)/2,py=top-18-hop;
+    oval(px-14,top-6,px+14,top,"rgba(0,0,0,0.18)",null);
+    oval(px-14,py-18,px+14,py+16,sp.farbe,"#1e293b",3);
+    oval(px-6,py-8,px-2,py-3,"white");oval(px+2,py-8,px+6,py-3,"white");
+    if(gew){
+      const kx=px,ky=py-24;
+      poly([[kx-15,ky+10],[kx-17,ky-8],[kx-7,ky+1],[kx,ky-12],[kx+7,ky+1],[kx+17,ky-8],[kx+15,ky+10]],"#facc15","#92400e",2);
+      const g=0.5+0.5*Math.sin(t*6);text(kx+26,ky-6,"✦","rgba(250,204,21,"+(0.4+0.6*g)+")",16,true);text(kx-28,ky+2,"✦","rgba(250,204,21,"+(1-0.6*g)+")",12,true);
+    }
+  });
+  rect(cx-200,base,cx+200,base+8,"#1e293b");
+  if(rang[3])text(440,498,`4. Platz  ${rang[3].name}  -  ${rang[3].coins} Coins`,"#334155",13,false);
+  text(440,520,"Merke: Fragen, zuhören und ein Nein immer respektieren.","#334155",12,false,"c",520);
+  if(!ON.active||ON.isHost)knopf(300,535,580,590,"NOCHMAL SPIELEN",neuStarten,"#16a34a",18);
+  else text(440,562,"Der Host kann ein neues Spiel starten.","#475569",13,false);
+}
+// ---- Eingabe
+function klickAt(x,y){for(const [x0,y0,x1,y1,a] of S.knoepfe.slice().reverse()){if(x>=x0&&x<=x1&&y>=y0&&y<=y1){a();return;}}}
+const lok=e=>[e.offsetX*BREITE/cv.clientWidth, e.offsetY*HOEHE/cv.clientHeight];
+cv.addEventListener("pointerdown",e=>{const [x,y]=lok(e);klickAt(x,y);});
+cv.addEventListener("pointermove",e=>{const [x,y]=lok(e);
+  cv.style.cursor=S.knoepfe.some(b=>x>=b[0]&&x<=b[2]&&y>=b[1]&&y<=b[3])?"pointer":"default";});
+document.querySelectorAll(".say button").forEach(b=>b.onclick=async()=>{
+  const t=b.previousElementSibling.textContent.replace(/[„“]/g,"");
+  try{await navigator.clipboard.writeText(t);b.textContent="Kopiert";}catch(e){b.textContent="Markiere den Text";}
+  setTimeout(()=>b.textContent="Kopieren",1500);
+});
+
+// ---- Vollbild
+function istVoll(){return !!document.fullscreenElement||$("cvwrap").classList.contains("full");}
+function vollbildLabel(){$("fsBtn").textContent=istVoll()?"Vollbild beenden":"Vollbild";if(typeof orient==="function")orient();}
+const hochkant=()=>innerHeight>innerWidth&&innerWidth<820;
+function vollbild(an){
+  const w=$("cvwrap");
+  if(an){
+    if(istVoll())return;
+    if(w.requestFullscreen){try{w.requestFullscreen().catch(()=>w.classList.add("full")).finally(vollbildLabel);}catch(e){w.classList.add("full");}}
+    else w.classList.add("full");
+  }else{
+    if(document.fullscreenElement)document.exitFullscreen();
+    w.classList.remove("full");
+  }
+  vollbildLabel();
+}
+$("fsBtn").onclick=()=>vollbild(!istVoll());
+document.addEventListener("fullscreenchange",vollbildLabel);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("cvwrap").classList.contains("full"))vollbild(false);});
+
+// ---- Handy: Querformat
+let hinweisWeg=false;
+function orient(){const h=$("rotHint");if(h)h.classList.toggle("show",istVoll()&&hochkant()&&!hinweisWeg);}
+addEventListener("resize",orient);addEventListener("orientationchange",orient);
+document.addEventListener("fullscreenchange",()=>{
+  if(document.fullscreenElement&&screen.orientation&&screen.orientation.lock){screen.orientation.lock("landscape").catch(()=>{});}
+  else if(!document.fullscreenElement&&screen.orientation&&screen.orientation.unlock){try{screen.orientation.unlock();}catch(e){}}
+  orient();
+});
+
+// ======================= ONLINE =======================
+const ON={active:false,isHost:false,code:"",room:null,me:null,nick:"",lastAct:{},seq:0,unsub:null,lastJson:"",sawHost:false,hostTimer:null};
+const meinZug=()=>!ON.active||(S.spieler[S.amZug]&&S.spieler[S.amZug].peer===ON.me);
+function send(t,a){
+  if(!ON.active||ON.isHost){
+    if(t==="roll")wuerfeln();
+    else if(t==="sel")waehlen(a);
+    else if(t==="ans")antworten();
+    else if(t==="next"&&(S.zustand==="ANTWORT"||S.zustand==="INFO"))weiter();
+  }else{ON.seq++;ON.room.presence({act:{n:ON.seq,t:t,a:a===undefined?null:a}});}
+}
+function raumPeers(){return ON.room?ON.room.peers().filter(p=>p.kind==="viewer"&&p.presence&&p.presence.rc===ON.code&&p.presence.nick):[];}
+function lobbySpieler(){
+  return raumPeers().slice().sort((a,b)=>(b.presence.host===1)-(a.presence.host===1)||(a.peer<b.peer?-1:1)).slice(0,4)
+    .map(p=>({peer:p.peer,name:String(p.presence.nick).slice(0,14),host:p.presence.host===1}));
+}
+function startOnline(){
+  const l=lobbySpieler();if(l.length<2)return;
+  vollbild(true);
+  const decks=baueDecks(l.length);
+  S.ap=l.length;
+  S.spieler=l.map((p,i)=>({nummer:i+1,name:p.name,farbe:SPIELER_FARBEN[i],pos:0,coins:START_COINS,deck:decks[i],idx:{1:0,2:0,3:0,4:0},peer:p.peer,rettung:true}));
+  S.amZug=0;S.maxRunden=S.ar;S.modus=S.as;S.zustand="WUERFELN";zeichnen();
+}
+function snap(){
+  const s=S;
+  const o={z:s.zustand,a:s.amZug,mr:s.maxRunden,m:s.modus,w:s.wuerfel,h:+s.huepfen.toFixed(3),t:+s.wuerfelT.toFixed(3),y:+s.wuerfelYaw.toFixed(3),
+    sp:s.spin.map(v=>+v.toFixed(2)),ws:s.wurfStart,e:s.einsatz,sw:s.schwer,i:s.infoText,g:s.gewaehlt,
+    au:s.auswahl,rf:s.rf?1:0,eg:s.endGrund,sg:s.sieger,p:s.spieler.map(p=>[p.name,p.pos,p.coins,p.peer,p.weg?1:0,p.rettung?1:0])};
+  if((s.zustand==="FRAGE"||s.zustand==="ANTWORT")&&s.frage){
+    o.q=s.frage.q;o.x=s.frage.erkl;o.o=s.optionen.map(([t,r])=>[t,s.zustand==="ANTWORT"&&r?1:0]);
+  }
+  return o;
+}
+function publish(){
+  if(!(ON.active&&ON.isHost&&ON.room))return;
+  const j=JSON.stringify(snap());if(j===ON.lastJson)return;ON.lastJson=j;
+  ON.room.presence({g:JSON.parse(j)}).catch(()=>{});
+}
+function applySnap(o){
+  if(!o)return;
+  S.zustand=o.z;S.amZug=o.a;S.maxRunden=o.mr;S.modus=o.m;S.as=o.m;S.ar=o.mr;S.wuerfel=o.w;S.huepfen=o.h;S.wuerfelT=o.t;S.wuerfelYaw=o.y;
+  S.spin=o.sp;S.wurfStart=o.ws;S.einsatz=o.e;S.schwer=o.sw;S.infoText=o.i;S.gewaehlt=o.g;
+  S.spieler=o.p.map((p,i)=>({nummer:i+1,name:p[0],farbe:SPIELER_FARBEN[i],pos:p[1],coins:p[2],peer:p[3],weg:!!p[4],rettung:!!p[5]}));
+  S.auswahl=o.au===undefined?null:o.au;S.rf=!!o.rf;S.endGrund=o.eg||"";S.sieger=o.sg===undefined?-1:o.sg;
+  if(o.z==="ENDE"&&!endLoop)endeStart();
+  if(o.q!==undefined){S.frage={q:o.q,erkl:o.x};S.optionen=o.o.map(([t,r])=>[t,!!r]);}
+  zeichnen();
+}
+function hostAct(peer,a){
+  const cur=S.spieler[S.amZug];if(!cur||cur.peer!==peer)return;
+  if(a.t==="roll"&&S.zustand==="WUERFELN")wuerfeln();
+  else if(a.t==="sel"&&S.zustand==="FRAGE"&&(a.a===0||a.a===1||a.a===2))waehlen(a.a);
+  else if(a.t==="ans"&&S.zustand==="FRAGE")antworten();
+  else if(a.t==="next"&&(S.zustand==="ANTWORT"||S.zustand==="INFO"))weiter();
+}
+function peersChange(){
+  if(!ON.active)return;
+  const mine=ON.room.peers().find(p=>p.isMe&&p.sameTab);if(mine)ON.me=mine.peer;
+  const ps=raumPeers();
+  if(ON.isHost){
+    for(const p of ps){
+      if(p.isMe)continue;
+      const a=p.presence.act;
+      if(a&&typeof a.n==="number"&&a.n>(ON.lastAct[p.peer]||0)){ON.lastAct[p.peer]=a.n;hostAct(p.peer,a);}
+    }
+    if(S.spieler.length&&S.zustand!=="START"&&S.zustand!=="ENDE"){
+      const da=new Set(ps.map(p=>p.peer));let ch=false;
+      S.spieler.forEach(s=>{if(!s.weg&&s.peer!==ON.me&&!da.has(s.peer)){s.weg=true;ch=true;}});
+      if(ch){if(fertig(aktueller())&&["WUERFELN","FRAGE","ANTWORT","INFO"].includes(S.zustand))weiter();else zeichnen();}
+    }
+    if(S.zustand==="START")zeichnen();
+  }else{
+    const h=ps.find(p=>p.presence.host===1);
+    if(h){
+      ON.sawHost=true;if(ON.hostTimer){clearTimeout(ON.hostTimer);ON.hostTimer=null;}
+      if(S.zustand==="HOSTWEG")S.zustand="START";
+      if(h.presence.g)applySnap(h.presence.g);else if(S.zustand==="START")zeichnen();
+    }else if(ON.sawHost&&!ON.hostTimer){
+      ON.hostTimer=setTimeout(()=>{ON.hostTimer=null;if(!raumPeers().some(p=>p.presence.host===1)){S.zustand="HOSTWEG";zeichnen();}},3500);
+    }
+  }
+  updateOnPanel();
+}
+function zeichneHostWeg(){
+  panel(190,230,690,450);
+  text(440,285,"Der Host hat das Spiel verlassen.","#0f172a",20,true,"c",440);
+  text(440,335,"Du kannst einen neuen Raum erstellen oder lokal spielen.","#334155",14,false,"c",440);
+  knopf(340,375,540,430,"RAUM VERLASSEN",raumVerlassen,"#2563eb",14);
+}
+// ---- DOM
+const el=id=>document.getElementById(id);
+function setStatus(t){el("onStatus").textContent=t;}
+function updateOnPanel(){
+  const on=ON.active;
+  el("mCreate").hidden=on;el("mJoin").hidden=on;el("codeWrap").hidden=on;el("mLeave").hidden=!on;el("nick").disabled=on;
+  if(!on)return;
+  const l=lobbySpieler();
+  setStatus(`Raum ${ON.code} · ${ON.isHost?"Du bist Host":"Du bist Mitspieler"} · Im Raum: ${l.map(p=>p.name).join(", ")||"..."} (${l.length}/4)`);
+}
+function ladePeerJS(){
+  return new Promise((res,rej)=>{
+    if(window.Peer)return res();
+    const s=document.createElement("script");s.src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js";
+    const t=setTimeout(()=>rej(new Error("timeout")),12000);
+    s.onload=()=>{clearTimeout(t);window.Peer?res():rej(new Error("peerjs"));};
+    s.onerror=()=>{clearTimeout(t);rej(new Error("laden"));};
+    document.head.appendChild(s);
+  });
+}
+// Ein "Raum" ueber PeerJS: Host in der Mitte, alle anderen verbinden sich mit ihm. Gleiche Schnittstelle wie der Claude-Raum.
+async function peerRoom(code,host){
+  await ladePeerJS();
+  const hostId="cqx-"+code.toLowerCase();
+  const peer=host?new Peer(hostId):new Peer();
+  const myId=await new Promise((res,rej)=>{peer.on("open",res);peer.on("error",rej);setTimeout(()=>rej({type:"timeout"}),12000);});
+  let mine={};let state={};state[myId]=mine;
+  const subs=new Set(),conns=new Map();let sched=null,schedP=null,hostConn=null;
+  const peersArr=()=>Object.keys(state).map(id=>({peer:id,by:null,isMe:id===myId,sameTab:id===myId,kind:"viewer",guest:false,presence:state[id],updatedAt:Date.now()}));
+  const notify=()=>{const ps=peersArr();subs.forEach(f=>{try{f({peers:ps,joined:[],left:[],updated:[]});}catch(e){console.error(e);}});};
+  const broadcast=()=>{if(sched)return;sched=setTimeout(()=>{sched=null;const m={t:"s",s:state};conns.forEach(c=>{try{c.send(m);}catch(e){}});},30);};
+  const toHost=()=>{if(schedP||!hostConn)return;schedP=setTimeout(()=>{schedP=null;try{hostConn.send({t:"p",p:mine});}catch(e){}},30);};
+  const api={
+    presence:async(patch)=>{mine={...mine};for(const k in patch){if(patch[k]===null)delete mine[k];else mine[k]=patch[k];}
+      state[myId]=mine;notify();if(host)broadcast();else toHost();},
+    peers:peersArr,
+    onPeers:(f)=>{subs.add(f);queueMicrotask(()=>f({peers:peersArr(),joined:peersArr(),left:[],updated:[]}));return()=>subs.delete(f);},
+    leave:async()=>{try{peer.destroy();}catch(e){}}
+  };
+  if(host){
+    peer.on("connection",c=>{
+      c.on("open",()=>{conns.set(c.peer,c);state[c.peer]=state[c.peer]||{};broadcast();notify();});
+      c.on("data",m=>{if(m&&m.t==="p"&&m.p&&typeof m.p==="object"){state[c.peer]=m.p;broadcast();notify();}});
+      const weg=()=>{conns.delete(c.peer);delete state[c.peer];broadcast();notify();};
+      c.on("close",weg);c.on("error",weg);
+    });
+  }else{
+    hostConn=await new Promise((res,rej)=>{
+      const c=peer.connect(hostId,{reliable:true});
+      const t=setTimeout(()=>rej({type:"peer-unavailable"}),10000);
+      peer.on("error",e=>{clearTimeout(t);rej(e);});
+      c.on("open",()=>{clearTimeout(t);res(c);});
+    });
+    hostConn.on("data",m=>{if(m&&m.t==="s"&&m.s){const s={};for(const id in m.s)s[id]=m.s[id];s[myId]=mine;state=s;notify();}});
+    hostConn.on("close",()=>{state={};state[myId]=mine;notify();});
+  }
+  return api;
+}
+async function raumOeffnen(code,host){
+  const nick=(el("nick").value||"").trim().slice(0,14);
+  if(!nick){setStatus("Bitte gib zuerst deinen Namen ein.");el("nick").focus();return;}
+  try{localStorage.setItem("cq_nick",nick);}catch(e){}
+  setStatus("Verbinde ...");
+  if(ON.active)await raumVerlassen(true);
+  let rm=null;
+  // 1) Claude-Seite: eingebauter Raum
+  if(window.claude&&claude.use){
+    try{const R=await claude.use("room");if(R){rm=R;try{rm=await R.join("cq-"+code.toLowerCase());}catch(e){rm=R;}}}catch(e){}
+  }
+  // 2) Sonst direkt von Geraet zu Geraet (PeerJS)
+  if(!rm){
+    for(let versuch=0;versuch<5&&!rm;versuch++){
+      try{rm=await peerRoom(code,host);}
+      catch(e){
+        if(host&&e&&e.type==="unavailable-id"){code=neuerCode();continue;}
+        const t=e&&e.type;
+        if(window.claude&&t!=="peer-unavailable"){setStatus("Online geht auf dieser Claude-Seite leider nicht. Auf der eigenen Website funktioniert es. Lokal spielen geht hier trotzdem.");return;}
+        setStatus(t==="peer-unavailable"?"Diesen Raum gibt es nicht. Prüfe den Code oder bitte den Host, den Raum zu erstellen.":
+                  "Online klappt gerade nicht: keine Verbindung möglich. Prüfe dein Internet. Lokal spielen geht trotzdem.");
+        return;
+      }
+    }
+    if(!rm){setStatus("Online klappt gerade nicht. Versuche es noch einmal.");return;}
+  }
+  Object.assign(ON,{active:true,isHost:host,code:code,room:rm,nick:nick,lastAct:{},seq:0,lastJson:"",sawHost:host,me:null});
+  await rm.presence({rc:code,nick:nick,host:host?1:0,g:null,act:null});
+  ON.unsub=rm.onPeers(peersChange);
+  neuStarten();S.zustand="START";zeichnen();
+  updateOnPanel();peersChange();
+}
+async function raumVerlassen(still){
+  if(ON.unsub){try{ON.unsub();}catch(e){}}
+  if(ON.room&&ON.room.leave){try{await ON.room.leave();}catch(e){}}
+  else if(ON.room){try{await ON.room.presence({rc:null,nick:null,host:null,g:null,act:null});}catch(e){}}
+  if(ON.hostTimer){clearTimeout(ON.hostTimer);ON.hostTimer=null;}
+  Object.assign(ON,{active:false,isHost:false,room:null,unsub:null,me:null,sawHost:false});
+  if(!still){neuStarten();updateOnPanel();setStatus("");}
+}
+function neuerCode(){const z="ABCDEFGHJKMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<4;i++)s+=z[Math.floor(Math.random()*z.length)];return s;}
+function modus(online){
+  el("mLokal").classList.toggle("on",!online);el("mOnline").classList.toggle("on",online);
+  el("onPanel").hidden=!online;
+  if(!online&&ON.active)raumVerlassen();
+}
+el("mLokal").onclick=()=>modus(false);
+el("mOnline").onclick=()=>modus(true);
+el("mCreate").onclick=()=>raumOeffnen(neuerCode(),true);
+el("mJoin").onclick=()=>{const c=(el("codeIn").value||"").toUpperCase().replace(/[^A-Z0-9]/g,"");if(c.length!==4){setStatus("Der Raum-Code hat 4 Zeichen.");return;}raumOeffnen(c,false);};
+el("mLeave").onclick=()=>raumVerlassen();
+try{el("nick").value=localStorage.getItem("cq_nick")||"";}catch(e){}
+
+updateOnPanel();
+
+neuStarten();
+schaerfe();
+new ResizeObserver(schaerfe).observe(cv);
+window.addEventListener('resize',schaerfe);
+
+$("rotHint").onclick=()=>{hinweisWeg=true;orient();};
+
+
+</script>
+</body>
+</html>
